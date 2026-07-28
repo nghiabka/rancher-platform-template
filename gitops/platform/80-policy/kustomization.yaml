@@ -1,0 +1,3 @@
+resources:
+  - kyverno.yaml
+  - require-non-root-policy.yaml

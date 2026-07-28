@@ -1,0 +1,11 @@
+resources:
+  - deployment.yaml
+  - service.yaml
+  - ingress.yaml
+  - servicemonitor.yaml
+  - networkpolicy.yaml
+
+labels:
+  - pairs:
+      app.kubernetes.io/name: sample-api
+      app.kubernetes.io/part-of: rancher-platform-template

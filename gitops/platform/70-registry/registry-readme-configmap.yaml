@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: registry-notes
+  namespace: registry
+data:
+  README: |
+    For beginner lab, use Docker Hub/GHCR or the local Docker registry from infra/local-services.
+    For a more complete platform, replace this with Harbor.

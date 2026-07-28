@@ -1,0 +1,85 @@
+name: sample-api-ci
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "apps/sample-api/**"
+      - "gitops/apps/sample-api/**"
+      - "ci/github/sample-api-ci.yaml"
+  pull_request:
+    paths:
+      - "apps/sample-api/**"
+      - "gitops/apps/sample-api/**"
+      - "ci/github/sample-api-ci.yaml"
+
+env:
+  IMAGE_NAME: ghcr.io/your-org/sample-api
+  APP_OVERLAY: gitops/apps/sample-api/overlays/local
+
+jobs:
+  test-build-scan:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set image tag
+        run: echo "IMAGE_TAG=${GITHUB_SHA::12}" >> "$GITHUB_ENV"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Test
+        working-directory: apps/sample-api
+        run: |
+          pip install -r requirements.txt
+          pytest
+
+      - name: Build image
+        run: docker build -t "$IMAGE_NAME:$IMAGE_TAG" apps/sample-api
+
+      - name: Scan image
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          format: table
+          exit-code: "1"
+          severity: CRITICAL,HIGH
+
+      - name: Login to GHCR
+        if: github.event_name == 'push'
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+      - name: Push image
+        if: github.event_name == 'push'
+        run: docker push "$IMAGE_NAME:$IMAGE_TAG"
+
+  update-gitops:
+    needs: test-build-scan
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set image tag
+        run: echo "IMAGE_TAG=${GITHUB_SHA::12}" >> "$GITHUB_ENV"
+
+      - name: Update image tag
+        run: |
+          cd "$APP_OVERLAY"
+          kustomize edit set image "localhost:5000/sample-api=$IMAGE_NAME:$IMAGE_TAG"
+
+      - name: Commit GitOps change
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "deploy(sample-api): update image to ${{ env.IMAGE_TAG }}"
+          file_pattern: gitops/apps/sample-api/overlays/local/kustomization.yaml

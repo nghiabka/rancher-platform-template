@@ -1,0 +1,8 @@
+resources:
+  - ../../base
+
+namespace: sample-api
+
+images:
+  - name: localhost:5000/sample-api
+    newTag: local
