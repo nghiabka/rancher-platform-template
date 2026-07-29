@@ -54,13 +54,14 @@ Ubuntu Host
 ## Learning Path Khuyen Nghi
 
 1. Doc `docs/learning-path.md`.
-2. Chay Rancher Manager bang Docker.
-3. Tao/import K3s cluster vao Rancher.
-4. Deploy app thu cong bang kubectl/Helm.
-5. Cai ArgoCD va chuyen sang GitOps.
-6. Cai monitoring/logging.
-7. Them secrets, backup, policy.
-8. Lam CI build image va cap nhat GitOps repo.
+2. Doc `docs/deployment-roadmap.md`.
+3. Chay Rancher Manager bang Docker.
+4. Tao/import K3s cluster vao Rancher.
+5. Deploy app thu cong bang kubectl/Helm.
+6. Cai ArgoCD va chuyen sang GitOps.
+7. Cai monitoring/logging.
+8. Them secrets, backup, policy.
+9. Lam CI build image va cap nhat GitOps repo.
 
 ## Repo Strategy
 
