@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/your-org/rancher-platform-template.git
+    repoURL: https://github.com/nghiabka/rancher-platform-template.git
     targetRevision: main
     path: gitops/platform
   destination:
