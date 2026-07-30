@@ -1,6 +1,8 @@
 .env
 .DS_Store
 *.log
+# Kubeconfig files with credentials
+infra/k3s/config.yml
 __pycache__/
 .pytest_cache/
 .venv/
