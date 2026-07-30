@@ -2,6 +2,8 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: sample-api
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
   labels:
     release: kube-prometheus-stack
 spec:

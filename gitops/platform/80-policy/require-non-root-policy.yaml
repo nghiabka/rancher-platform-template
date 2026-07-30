@@ -2,6 +2,8 @@ apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
   name: require-run-as-non-root
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   validationFailureAction: Audit
   background: true
