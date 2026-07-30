@@ -20,6 +20,7 @@
 - "Dùng codegraph xem các caller của <function> trước khi sửa."
 
 - Không chạy `docker`, `kubectl`, `helm`, `pytest` hoặc lệnh triển khai nếu người dùng chưa yêu cầu rõ.
+- Không đổi Git author/user name thành `Claude`; khi commit, dùng Git user hiện tại của repo.
 - Không đọc hoặc in secret, kubeconfig, `.env` hay credential files.
 - Trước khi sửa, kiểm tra `git diff` và giữ nguyên các thay đổi không liên quan.
 - Sau khi sửa, chạy kiểm tra nhỏ nhất phù hợp với thay đổi và báo rõ lệnh đã chạy.
