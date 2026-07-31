@@ -13,6 +13,13 @@ spec:
     targetRevision: 3.2.7
     helm:
       releaseName: kyverno
+      values: |
+        cleanupJobs:
+          clusterAdmissionReports:
+            image:
+              registry: registry.k8s.io
+              repository: kubectl
+              tag: v1.28.5
   destination:
     server: https://kubernetes.default.svc
     namespace: kyverno
