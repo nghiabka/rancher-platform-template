@@ -26,6 +26,7 @@
 - Không đọc hoặc in secret, kubeconfig, `.env` hay credential files.
 - Trước khi sửa, kiểm tra `git diff` và giữ nguyên các thay đổi không liên quan.
 - Sau khi sửa, chạy kiểm tra nhỏ nhất phù hợp với thay đổi và báo rõ lệnh đã chạy.
+- merge code thì không cần phải test
 
 ## Suggested checks
 
