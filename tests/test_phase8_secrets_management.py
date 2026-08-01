@@ -33,6 +33,7 @@ def test_sample_api_deployment_sources_secret_env_var():
     assert "secretKeyRef:" in deployment
     assert "name: sample-api-demo-secret" in deployment
     assert "key: DEMO_VALUE" in deployment
+    assert "optional: true" in deployment
 
 
 def test_tutorial_phase_8_explains_kubeseal_workflow():
