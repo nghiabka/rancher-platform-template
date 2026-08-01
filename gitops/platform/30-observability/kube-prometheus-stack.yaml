@@ -16,6 +16,11 @@ spec:
       values: |
         grafana:
           adminPassword: admin12345
+          additionalDataSources:
+            - name: Loki
+              type: loki
+              access: proxy
+              url: http://loki-gateway.logging.svc.cluster.local
           ingress:
             enabled: true
             ingressClassName: nginx
