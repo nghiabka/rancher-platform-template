@@ -20,3 +20,15 @@ def test_policy_parent_does_not_sync_kyverno_crs_before_crd_app():
 
     assert "kyverno.yaml" in policy
     assert "require-non-root-policy.yaml" not in policy
+
+
+def test_kyverno_app_uses_server_side_apply_for_crds():
+    kyverno = read_repo_file("gitops/platform/80-policy/kyverno.yaml")
+
+    assert "ServerSideApply=true" in kyverno
+
+
+def test_velero_app_uses_server_side_apply_for_crds():
+    velero = read_repo_file("gitops/platform/60-backup/velero.yaml")
+
+    assert "ServerSideApply=true" in velero
