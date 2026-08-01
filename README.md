@@ -55,12 +55,12 @@ Ubuntu Host
 
 1. Doc `docs/learning-path.md`.
 2. Doc `docs/deployment-roadmap.md`.
-3. Chay Rancher Manager bang Docker.
-4. Tao/import K3s cluster vao Rancher.
-5. Deploy app thu cong bang kubectl/Helm.
-6. Cai ArgoCD va chuyen sang GitOps.
-7. Cai monitoring/logging.
-8. Them secrets, backup, policy.
+3. Doc `docs/architecture.md` de nam kien truc tong the.
+4. Lam theo `docs/tutorial-phase-0-3.md` de chay lab theo tung phase.
+5. Chay Rancher Manager bang Docker.
+6. Dung cluster `local` san co hoac tao/import K3s cluster vao Rancher.
+7. Cai ArgoCD va chuyen sang GitOps.
+8. Cai traffic layer, monitoring/logging, secrets, backup va policy.
 9. Lam CI build image va cap nhat GitOps repo.
 
 ## Repo Strategy
@@ -74,16 +74,31 @@ Template nay gom ca hai de hoc nhanh. Khi len thuc te, hay tach ra.
 
 ## Domain Local Goi Y
 
-Dung `/etc/hosts`:
+Dung `/etc/hosts` cho lab local:
 
 ```text
 127.0.0.1 rancher.local
 127.0.0.1 argocd.local
 127.0.0.1 grafana.local
+127.0.0.1 prometheus.local
 127.0.0.1 sample-api.local
 ```
 
 Neu cluster khong expose qua localhost, thay `127.0.0.1` bang IP node/VM.
+
+Voi lab dang expose qua Cloudflare/ingress-nginx, ArgoCD co the truy cap qua:
+
+```text
+https://argocd.justnghia.dev
+```
+
+Neu ingress-nginx van la NodePort khi chay local, truy cap truc tiep qua port NodePort HTTP, vi du:
+
+```text
+http://argocd.local:31910
+http://grafana.local:31910
+http://prometheus.local:31910
+```
 
 ## Phase 1 Commands
 
