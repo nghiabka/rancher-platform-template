@@ -1,0 +1,34 @@
+services:
+  clipproxy-api:
+    image: eceasy/cli-proxy-api:latest
+    container_name: clipproxy-api
+    restart: unless-stopped
+    ports:
+      - "8317:8317"
+    volumes:
+      - ./config.yaml:/CLIProxyAPI/config.yaml
+      - ./cpa-data:/root/.cli-proxy-api
+
+  clipproxy-manager:
+    image: seakee/cpa-manager-plus:latest
+    container_name: clipproxy-manager
+    restart: unless-stopped
+    ports:
+      - "18317:18317"
+    environment:
+      HTTP_ADDR: "0.0.0.0:18317"
+      CPA_MANAGER_ADMIN_KEY: "example-admin-key-change-me"
+      CPA_UPSTREAM_URL: "http://clipproxy-api:8317"
+      CPA_MANAGEMENT_KEY: "example-management-key-change-me"
+      USAGE_DB_PATH: "/data/usage.sqlite"
+      CPA_MANAGER_DATA_KEY_PATH: "/data/data.key"
+      USAGE_COLLECTOR_MODE: "auto"
+      USAGE_BATCH_SIZE: "100"
+      USAGE_POLL_INTERVAL_MS: "500"
+    volumes:
+      - clipproxy-manager-data:/data
+    depends_on:
+      - clipproxy-api
+
+volumes:
+  clipproxy-manager-data:

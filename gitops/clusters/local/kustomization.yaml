@@ -1,3 +1,4 @@
 resources:
   - platform.yaml
   - sample-api.yaml
+  - clipproxy.yaml

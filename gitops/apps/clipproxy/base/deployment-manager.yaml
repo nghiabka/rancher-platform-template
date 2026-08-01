@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: clipproxy-manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: clipproxy
+      app.kubernetes.io/component: manager
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: clipproxy
+        app.kubernetes.io/component: manager
+    spec:
+      containers:
+        - name: clipproxy-manager
+          image: seakee/cpa-manager-plus:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 18317
+          env:
+            - name: HTTP_ADDR
+              value: 0.0.0.0:18317
+            - name: CPA_UPSTREAM_URL
+              value: http://clipproxy-api:8317
+            - name: CPA_MANAGER_ADMIN_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: clipproxy-secret
+                  key: CPA_MANAGER_ADMIN_KEY
+            - name: CPA_MANAGEMENT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: clipproxy-secret
+                  key: CPA_MANAGEMENT_KEY
+            - name: USAGE_DB_PATH
+              value: /data/usage.sqlite
+            - name: CPA_MANAGER_DATA_KEY_PATH
+              value: /data/data.key
+            - name: USAGE_COLLECTOR_MODE
+              value: auto
+            - name: USAGE_BATCH_SIZE
+              value: "100"
+            - name: USAGE_POLL_INTERVAL_MS
+              value: "500"
+          readinessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          volumeMounts:
+            - name: data
+              mountPath: /data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: clipproxy-manager-data

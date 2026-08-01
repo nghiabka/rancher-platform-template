@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: clipproxy
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: clipproxy.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: clipproxy-manager
+                port:
+                  name: http

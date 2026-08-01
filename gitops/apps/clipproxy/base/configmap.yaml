@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: clipproxy-config
+data:
+  config.yaml: |
+    host: ""
+    port: 8317
+    remote-management:
+      allow-remote: true
+      secret-key: "$2a$10$tU4j5YeYeiYJ1EWSBYrdDe16f6MDwKYK8Y9n/Ef.H0BLL8XMBxEBO"
+      disable-control-panel: false
+    plugins:
+      enabled: true
+    usage-statistics-enabled: true
+    redis-usage-queue-retention-seconds: 60
