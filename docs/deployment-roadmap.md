@@ -147,15 +147,15 @@ Muc tieu:
 
 Checklist:
 
-- [ ] Chon registry: GHCR, Docker Hub, local registry, hoac Harbor.
-- [ ] Cap nhat image name trong CI va GitOps manifests.
-- [ ] Chay test sample API.
-- [ ] Build image.
-- [ ] Scan image bang Trivy.
-- [ ] Push image.
-- [ ] Update image tag trong Kustomize overlay.
-- [ ] Verify ArgoCD sync va rollout.
-- [ ] Test rollback bang Git revert.
+- [x] Chon registry: Docker Hub cho CI/release, local registry cho lab.
+- [x] Cap nhat image name trong CI va GitOps manifests.
+- [x] Chay test sample API.
+- [x] Build image.
+- [x] Scan image bang Trivy.
+- [x] Push image.
+- [x] Update image tag trong Kustomize overlay.
+- [x] Verify ArgoCD sync va rollout.
+- [x] Test rollback bang Git revert.
 
 Ket qua mong doi:
 

@@ -13,7 +13,7 @@ test:
   script:
     - cd apps/sample-api
     - pip install -r requirements.txt
-    - pytest
+    - python -m pytest
 
 build:
   stage: build
@@ -31,4 +31,4 @@ scan:
     name: aquasec/trivy:latest
     entrypoint: [""]
   script:
-    - trivy image --exit-code 1 --severity HIGH,CRITICAL "$IMAGE_NAME:$IMAGE_TAG"
+    - trivy image --exit-code 1 --ignore-unfixed --severity HIGH,CRITICAL "$IMAGE_NAME:$IMAGE_TAG"

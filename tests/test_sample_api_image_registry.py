@@ -28,7 +28,9 @@ def test_github_actions_uses_docker_hub_image_and_login():
     workflow = read_repo_file("ci/github/sample-api-ci.yaml")
 
     assert f"IMAGE_NAME: {DOCKER_HUB_IMAGE}" in workflow
+    assert 'echo "IMAGE_TAG=${GITHUB_SHA::12}" >> "$GITHUB_ENV"' in workflow
     assert "secrets.DOCKERHUB_TOKEN" in workflow
+    assert "if: github.event_name == 'push'" in workflow
     assert 'docker login -u "nghiadvbka" --password-stdin' in workflow
     assert "python -m pytest" in workflow
     assert "ignore-unfixed: true" in workflow
