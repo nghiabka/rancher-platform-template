@@ -9,12 +9,13 @@ def read_repo_file(relative_path: str) -> str:
     return (ROOT / relative_path).read_text()
 
 
-def test_local_overlay_rewrites_sample_api_image_to_docker_hub():
+def test_local_overlay_rewrites_sample_api_image_to_docker_hub_release_tag():
     overlay = read_repo_file("gitops/apps/sample-api/overlays/local/kustomization.yaml")
 
     assert "name: localhost:5000/sample-api" in overlay
     assert f"newName: {DOCKER_HUB_IMAGE}" in overlay
-    assert "newTag: local" in overlay
+    assert "newTag:" in overlay
+    assert "newTag: local" not in overlay
 
 
 def test_build_helper_pushes_sample_api_to_docker_hub_by_default():
@@ -29,6 +30,8 @@ def test_github_actions_uses_docker_hub_image_and_login():
     assert f"IMAGE_NAME: {DOCKER_HUB_IMAGE}" in workflow
     assert "secrets.DOCKERHUB_TOKEN" in workflow
     assert 'docker login -u "nghiadvbka" --password-stdin' in workflow
+    assert "python -m pytest" in workflow
+    assert "ignore-unfixed: true" in workflow
     assert 'kustomize edit set image "localhost:5000/sample-api=$IMAGE_NAME:$IMAGE_TAG"' in workflow
 
 

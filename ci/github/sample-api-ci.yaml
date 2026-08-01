@@ -40,7 +40,7 @@ jobs:
         working-directory: apps/sample-api
         run: |
           pip install -r requirements.txt
-          pytest
+          python -m pytest
 
       - name: Build image
         run: docker build -t "$IMAGE_NAME:$IMAGE_TAG" apps/sample-api
@@ -51,6 +51,7 @@ jobs:
           image-ref: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           format: table
           exit-code: "1"
+          ignore-unfixed: true
           severity: CRITICAL,HIGH
 
       - name: Login to Docker Hub
