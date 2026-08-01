@@ -21,6 +21,12 @@ spec:
         - name: sample-api
           image: localhost:5000/sample-api:local
           imagePullPolicy: IfNotPresent
+          env:
+            - name: DEMO_SECRET_VALUE
+              valueFrom:
+                secretKeyRef:
+                  name: sample-api-demo-secret
+                  key: DEMO_VALUE
           ports:
             - name: http
               containerPort: 8080

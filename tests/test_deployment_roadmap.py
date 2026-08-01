@@ -17,3 +17,15 @@ def test_phase_7_roadmap_marks_cicd_flow_complete():
     assert "- [x] Update image tag trong Kustomize overlay." in roadmap
     assert "- [x] Test rollback bang Git revert." in roadmap
     assert "Co pipeline release hoan chinh cho app mau." in roadmap
+
+
+def test_phase_8_roadmap_mentions_sealed_secrets_and_kubeseal():
+    roadmap = read_repo_file("docs/deployment-roadmap.md")
+
+    assert "## Phase 8: Secrets Management" in roadmap
+    assert "Khong commit secret plain text vao Git." in roadmap
+    assert "- [x] Cai Sealed Secrets." in roadmap
+    assert "- [x] Cai `kubeseal` tren may local." in roadmap
+    assert "- [x] Seal secret thanh `SealedSecret`." in roadmap
+    assert "- [x] Commit `SealedSecret` vao GitOps repo." in roadmap
+    assert "Secrets duoc quan ly theo GitOps ma khong lo plain text leak." in roadmap
