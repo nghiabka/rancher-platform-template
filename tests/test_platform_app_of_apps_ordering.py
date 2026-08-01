@@ -42,3 +42,12 @@ def test_platform_parent_only_includes_completed_phase_components():
     assert "60-backup" not in platform
     assert "70-registry" not in platform
     assert "80-policy" not in platform
+
+
+def test_argocd_bootstrap_configures_application_health_for_app_of_apps():
+    kustomization = read_repo_file("gitops/bootstrap/argocd/kustomization.yaml")
+    argocd_cm = read_repo_file("gitops/bootstrap/argocd/argocd-cm.yaml")
+
+    assert "argocd-cm.yaml" in kustomization
+    assert "resource.customizations.health.argoproj.io_Application" in argocd_cm
+    assert "obj.status.health.status" in argocd_cm
