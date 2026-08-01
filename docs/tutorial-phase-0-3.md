@@ -1330,10 +1330,11 @@ Sau phase này bạn cần có:
 - Biết tạo Kubernetes Secret tạm thời.
 - Biết seal secret thành `SealedSecret` để commit vào Git.
 - Không commit plain text secret.
+- `sample-api` nhận được env var từ Secret mà không expose secret value.
 
 ### Bước 8.1: Cài Sealed Secrets controller
 
-Nếu app `sealed-secrets` chưa tồn tại trong ArgoCD, apply Application manifest:
+Platform parent đã include `gitops/platform/50-secrets`, nên khi ArgoCD sync platform thì app `sealed-secrets` sẽ được quản lý qua GitOps. Nếu cần cài thủ công trong lab, apply Application manifest:
 
 ```bash
 kubectl apply -n argocd -f gitops/platform/50-secrets/sealed-secrets.yaml
@@ -1346,7 +1347,7 @@ kubectl -n argocd get application sealed-secrets
 kubectl -n sealed-secrets get pods
 ```
 
-Kết quả mong đợi có controller Running.
+Kết quả mong đợi có controller Running trong namespace `sealed-secrets`.
 
 ### Bước 8.2: Cài kubeseal trên máy local
 
@@ -1358,44 +1359,58 @@ kubeseal --version
 
 Nếu chưa có, cài `kubeseal` theo hướng dẫn chính thức của Bitnami Sealed Secrets cho OS của bạn.
 
-### Bước 8.3: Tạo Secret tạm và seal
+### Bước 8.3: Tạo temp Secret outside the repo
 
-Ví dụ tạo secret tạm ở file ngoài repo:
+Tạo Secret tạm ngoài repo để tránh commit plain text secret. Ví dụ dùng Secret name mà Deployment đang tham chiếu:
 
 ```bash
-kubectl -n sample-api create secret generic sample-api-secret \
+kubectl -n sample-api create secret generic sample-api-demo-secret \
   --from-literal=DEMO_VALUE='<secret-value>' \
-  --dry-run=client -o yaml > /tmp/sample-api-secret.yaml
+  --dry-run=client -o yaml > /tmp/sample-api-demo-secret.yaml
 ```
 
-Seal secret:
+Không copy file `/tmp/sample-api-demo-secret.yaml` vào Git.
+
+### Bước 8.4: seal it to a manifest for the overlay/example path
+
+Seal Secret tạm thành `SealedSecret` bằng controller trong cluster hiện tại:
 
 ```bash
 kubeseal \
   --controller-name sealed-secrets-controller \
   --controller-namespace sealed-secrets \
   --format yaml \
-  < /tmp/sample-api-secret.yaml \
-  > /tmp/sample-api-sealed-secret.yaml
+  < /tmp/sample-api-demo-secret.yaml \
+  > gitops/apps/sample-api/overlays/local/sealed-secret.example.yaml
 ```
 
-Kiểm tra file sealed secret không còn plain text value trước khi copy vào GitOps repo.
+Kiểm tra file `sealed-secret.example.yaml` không còn plain text value trước khi commit. File example trong repo chỉ chứa placeholder; khi chạy lab thật, generate lại bằng public cert của cluster của bạn.
 
-### Bước 8.4: Commit SealedSecret vào GitOps
+### Bước 8.5: Commit SealedSecret vào GitOps
 
-Khi đã kiểm tra file sealed secret an toàn, copy vào overlay phù hợp, ví dụ:
+Khi đã kiểm tra file sealed secret an toàn, add file đã generate vào overlay local:
 
 ```text
-gitops/apps/sample-api/overlays/local/sealed-secret.yaml
+gitops/apps/sample-api/overlays/local/sealed-secret.example.yaml
 ```
 
-Sau đó thêm file này vào `resources` của:
+Sau đó thêm file đã generate vào `resources` của:
 
 ```text
 gitops/apps/sample-api/overlays/local/kustomization.yaml
 ```
 
-Commit và để ArgoCD sync.
+Commit và để ArgoCD sync. Controller sẽ tạo Kubernetes Secret thật `sample-api-demo-secret` trong namespace `sample-api`.
+
+### Bước 8.6: verify the pod receives the env var without exposing secret value
+
+Deployment `sample-api` đọc Secret qua env var `DEMO_SECRET_VALUE`. Không in giá trị secret ra API hoặc log. Kiểm tra trạng thái pod và manifest wiring:
+
+```bash
+kubectl -n sample-api get secret sample-api-demo-secret
+kubectl -n sample-api describe deploy sample-api
+kubectl -n sample-api rollout status deploy/sample-api
+```
 
 ### Checkpoint Phase 8
 
@@ -1405,6 +1420,7 @@ Phase 8 đạt yêu cầu khi:
 - Bạn tạo được `SealedSecret` từ một Secret tạm.
 - Git chỉ chứa `SealedSecret`, không chứa plain text secret.
 - Sau ArgoCD sync, Kubernetes Secret thật xuất hiện trong namespace đích.
+- `sample-api` nhận env var từ Secret mà không expose secret value.
 
 ## Phase 9: Backup And Restore
 

@@ -169,12 +169,12 @@ Muc tieu:
 
 Checklist:
 
-- [ ] Cai Sealed Secrets.
-- [ ] Cai `kubeseal` tren may local.
-- [ ] Tao Kubernetes Secret tam thoi.
-- [ ] Seal secret thanh `SealedSecret`.
-- [ ] Commit `SealedSecret` vao GitOps repo.
-- [ ] Verify app doc duoc secret sau khi ArgoCD sync.
+- [x] Cai Sealed Secrets.
+- [x] Cai `kubeseal` tren may local.
+- [x] Tao Kubernetes Secret tam thoi.
+- [x] Seal secret thanh `SealedSecret`.
+- [x] Commit `SealedSecret` vao GitOps repo.
+- [x] Verify app doc duoc secret sau khi ArgoCD sync.
 
 Ket qua mong doi:
 
