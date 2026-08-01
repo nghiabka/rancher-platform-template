@@ -15,7 +15,7 @@ metadata:
     argocd.argoproj.io/sync-wave: "2"
 spec:
   acme:
-    email: platform@example.com
+    email: admin@justnghia.dev
     server: https://acme-staging-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
       name: letsencrypt-staging
