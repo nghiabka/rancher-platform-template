@@ -30,3 +30,11 @@ def test_grafana_has_loki_datasource():
     assert "name: Loki" in kube_prometheus_stack
     assert "type: loki" in kube_prometheus_stack
     assert "url: http://loki-gateway.logging.svc.cluster.local" in kube_prometheus_stack
+
+
+def test_prometheus_stack_uses_server_side_apply_for_large_crds():
+    kube_prometheus_stack = read_repo_file(
+        "gitops/platform/30-observability/kube-prometheus-stack.yaml"
+    )
+
+    assert "ServerSideApply=true" in kube_prometheus_stack
