@@ -20,7 +20,7 @@
 - "Dùng codegraph xem các caller của <function> trước khi sửa."
 
 - Không chạy `docker`, `kubectl`, `helm`, `pytest` hoặc lệnh triển khai nếu người dùng chưa yêu cầu rõ.
-- Commit message không được tự thêm dòng `Co-Authored-By: Claude <noreply@anthropic.com>`
+- Tuyệt đối Commit message không được tự thêm dòng `Co-Authored-By: Claude <noreply@anthropic.com>`
 - Khi hiển thị lịch sử commit, ưu tiên format ngắn không in commit body/trailer như `git log --oneline --decorate` hoặc `git log --format='%h %s'`, trừ khi người dùng yêu cầu xem commit message đầy đủ.
 - Không đọc hoặc in secret, kubeconfig, `.env` hay credential files.
 - Trước khi sửa, kiểm tra `git diff` và giữ nguyên các thay đổi không liên quan.
