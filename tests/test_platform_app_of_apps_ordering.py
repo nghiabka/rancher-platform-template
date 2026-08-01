@@ -32,3 +32,13 @@ def test_velero_app_uses_server_side_apply_for_crds():
     velero = read_repo_file("gitops/platform/60-backup/velero.yaml")
 
     assert "ServerSideApply=true" in velero
+
+
+def test_platform_parent_only_includes_completed_phase_components():
+    platform = read_repo_file("gitops/platform/kustomization.yaml")
+
+    assert "40-logging" in platform
+    assert "50-secrets" not in platform
+    assert "60-backup" not in platform
+    assert "70-registry" not in platform
+    assert "80-policy" not in platform

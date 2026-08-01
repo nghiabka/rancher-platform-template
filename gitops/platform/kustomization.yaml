@@ -4,8 +4,4 @@ resources:
   - 20-cert-manager
   - 30-observability
   - 40-logging
-  - 50-secrets
-  - 60-backup
-  - 70-registry
-  - 80-policy
   - ../bootstrap/argocd
