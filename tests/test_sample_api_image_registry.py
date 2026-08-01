@@ -30,3 +30,25 @@ def test_github_actions_uses_docker_hub_image_and_login():
     assert "secrets.DOCKERHUB_TOKEN" in workflow
     assert 'docker login -u "nghiadvbka" --password-stdin' in workflow
     assert 'kustomize edit set image "localhost:5000/sample-api=$IMAGE_NAME:$IMAGE_TAG"' in workflow
+
+
+def test_sample_api_dockerfile_runs_as_non_root_uid():
+    dockerfile = read_repo_file("apps/sample-api/Dockerfile")
+
+    assert "USER 10001" in dockerfile
+
+
+def test_sample_api_deployment_runs_with_non_root_uid():
+    deployment = read_repo_file("gitops/apps/sample-api/base/deployment.yaml")
+
+    assert "runAsNonRoot: true" in deployment
+    assert "runAsUser: 10001" in deployment
+
+
+def test_local_overlay_forces_pull_on_mutable_local_tag():
+    overlay = read_repo_file("gitops/apps/sample-api/overlays/local/kustomization.yaml")
+    patch = read_repo_file("gitops/apps/sample-api/overlays/local/deployment-patch.yaml")
+
+    assert "patchesStrategicMerge:" in overlay
+    assert "- deployment-patch.yaml" in overlay
+    assert "imagePullPolicy: Always" in patch

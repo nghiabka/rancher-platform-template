@@ -7,3 +7,6 @@ images:
   - name: localhost:5000/sample-api
     newName: nghiadvbka/sample-api
     newTag: local
+
+patchesStrategicMerge:
+  - deployment-patch.yaml
