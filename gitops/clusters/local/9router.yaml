@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: 9router-local
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/nghiabka/rancher-platform-template.git
+    targetRevision: main
+    path: gitops/apps/9router/overlays/local
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: 9router
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+

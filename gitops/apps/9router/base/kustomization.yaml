@@ -1,0 +1,9 @@
+resources:
+  - deployment.yaml
+  - service.yaml
+  - ingress.yaml
+  - pvc.yaml
+
+commonLabels:
+  app.kubernetes.io/name: 9router
+  app.kubernetes.io/part-of: rancher-platform-template

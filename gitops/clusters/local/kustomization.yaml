@@ -2,3 +2,4 @@ resources:
   - platform.yaml
   - sample-api.yaml
   - clipproxy.yaml
+  - 9router.yaml
